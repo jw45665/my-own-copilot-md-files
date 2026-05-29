@@ -232,6 +232,25 @@ export async function uploadProfilePicture(file) {
     });
     return response.ok;
 }
+
+export async function checkUsernameAvailability(username) {
+    const response = await fetch(`${API_BASE}/api/v1/profile/check-username/${encodeURIComponent(username)}`);
+    if (!response.ok) throw new Error(`Benutzernamen-Prüfung fehlgeschlagen (${response.status})`);
+    return await response.json(); // { available: true/false, message: "..." }
+}
+
+export async function getCities(query) {
+    if (!query || query.length < 2) return [];
+    const response = await fetch(`${API_BASE}/api/v1/autocomplete/cities?query=${encodeURIComponent(query)}`);
+    if (!response.ok) return [];
+    return await response.json(); // string[]
+}
+
+export async function getCountries() {
+    const response = await fetch(`${API_BASE}/api/v1/autocomplete/countries`);
+    if (!response.ok) return [];
+    return await response.json(); // [{ name, code }, ...]
+}
 ```
 
 ### A.3 Login-Seite (`login.html`)
@@ -290,6 +309,7 @@ export async function uploadProfilePicture(file) {
 <body>
     <h1>Mein Profil</h1>
     <img id="avatar" src="" alt="Profilbild" style="width:100px;height:100px;border-radius:50%">
+    <p id="username"></p>
     <p id="name"></p>
     <p id="email"></p>
     <input type="file" id="picUpload" accept="image/*">
@@ -302,8 +322,9 @@ export async function uploadProfilePicture(file) {
 
         const profile = await getProfile();
         document.getElementById('avatar').src = profile.profilePictureUrl ?? 'img/default-avatar.png';
-        document.getElementById('name').textContent = profile.displayName ?? profile.email;
-        document.getElementById('email').textContent = profile.email;
+        document.getElementById('username').textContent = '@' + (profile.publicUsername ?? profile.displayName);
+        document.getElementById('name').textContent = profile.displayName ?? '';
+        document.getElementById('email').textContent = profile.email ?? '';
 
         document.getElementById('picUpload').addEventListener('change', async (e) => {
             const file = e.target.files[0];
@@ -455,14 +476,62 @@ namespace YourNamespace.Services;
 public record LoginResponse(string TokenType, string AccessToken,
     int ExpiresIn, string RefreshToken);
 
-public record UserProfileDto(string UserId, string Email,
-    string? FirstName, string? LastName, string? DisplayName,
-    string? Bio, string? ProfilePictureUrl, int ProfileCompleteness);
+// GET /api/v1/profile  — vollständiges Profil (eigenes oder fremdes)
+public record UserProfileDto(
+    string UserId,
+    string PublicUsername,
+    string DisplayName,
+    string? FirstName, string? LastName,
+    string? Email,              // nur eigenes Profil (privat)
+    string? PhoneNumber,        // nur eigenes Profil (privat)
+    DateTime? DateOfBirth,
+    string? Bio,
+    string? ProfilePictureUrl,
+    int Gender,                 // 0=Unspecified, 1=Male, 2=Female, 3=Other
+    string? CityName,
+    string? Country,            // ISO 3166-1 Alpha-2 (z.B. "DE")
+    string? Address,            // nur eigenes Profil (privat)
+    string? PostalCode,         // nur eigenes Profil (privat)
+    string? TimeZone,
+    string? PreferredLanguage,  // ISO 639-1 (z.B. "de")
+    string? Website,
+    Dictionary<string, string>? SocialLinks,
+    int ProfileVisibility,      // 0=Public, 1=FriendsOnly, 2=Private
+    int UserRole,               // 0=Guest, 1=RegisteredFree, 2=RegisteredPaid, 3=Moderator, 4=Admin
+    bool IsProfilePublic,
+    DateTime CreatedAt,
+    DateTime? LastActiveAt,
+    int ProfileCompleteness,    // 0-100 %
+    bool AllowMessagesFromStrangers,
+    bool EmailNotificationsEnabled
+);
 
-public record UpdateProfileDto(string? FirstName, string? LastName,
-    string? DisplayName, string? Bio, string? PhoneNumber);
+// PUT /api/v1/profile  — Profil aktualisieren
+public record UpdateProfileDto(
+    string PublicUsername,              // REQUIRED · 3-30 Zeichen · [a-zA-Z0-9_\- ]
+    string DisplayName,                 // REQUIRED · 3-50 Zeichen
+    string? FirstName, string? LastName,
+    string? PhoneNumber,
+    DateTime? DateOfBirth,
+    string? Bio,                        // max. 500 Zeichen
+    int Gender,                         // 0=Unspecified, 1=Male, 2=Female, 3=Other
+    string? CityName,
+    string? Country,                    // ISO 3166-1 Alpha-2 · Großbuchstaben
+    string? Address,
+    string? PostalCode,
+    string? TimeZone,
+    string? PreferredLanguage,          // ISO 639-1 · Kleinbuchstaben
+    string? Website,
+    Dictionary<string, string>? SocialLinks,
+    int ProfileVisibility,              // 0=Public, 1=FriendsOnly, 2=Private
+    bool AllowMessagesFromStrangers,
+    bool EmailNotificationsEnabled
+);
 
-public record ApiResponse<T>(bool Success, T? Data, string? Message);
+// GET /api/v1/profile/check-username/{username}
+public record UsernameAvailabilityDto(bool Available, string? Message);
+
+public record ApiResponse<T>(bool Success, T? Data, string? Message, List<string> Errors);
 ```
 
 ### B.3 DI-Registrierung (`MauiProgram.cs`)
@@ -558,10 +627,13 @@ Alle Endpunkte – aus der API-Dokumentation und Swagger-Spezifikation entnehmen
 | POST | `/identity/confirmEmail` | – | E-Mail bestätigen |
 | POST | `/identity/resendConfirmationEmail` | – | Bestätigungs-E-Mail erneut senden |
 | GET  | `/identity/manage/info` | Bearer | Eigene Benutzerinfos |
-| GET  | `/api/v1/profile` | Bearer | Eigenes Profil |
-| GET  | `/api/v1/profile/{userId}` | Bearer | Profil eines anderen Nutzers |
+| GET  | `/api/v1/profile` | Bearer | Eigenes vollständiges Profil |
+| GET  | `/api/v1/profile/{userId}` | Bearer | Profil eines anderen Nutzers (gefiltert nach Sichtbarkeit) |
 | PUT  | `/api/v1/profile` | Bearer | Profil aktualisieren |
 | POST | `/api/v1/profile/picture` | Bearer | Profilbild hochladen (multipart/form-data) |
+| GET  | `/api/v1/profile/check-username/{username}` | – | Benutzernamen-Verfügbarkeit prüfen |
+| GET  | `/api/v1/autocomplete/cities?query=...` | – | Städte-Autocomplete |
+| GET  | `/api/v1/autocomplete/countries` | – | Länderliste (name + ISO-Code) |
 | GET  | `/health/internal` | Bearer | Server-Health (nur loopback) |
 
 > Verbindliche Referenz: `Docs/API-DOCUMENTATION.md` oder `http://localhost:5101/swagger`
@@ -579,11 +651,18 @@ $resp = Invoke-RestMethod "http://localhost:5101/identity/login?useCookies=false
     -Method Post -Body $body -ContentType "application/json"
 Write-Host "Token: $($resp.accessToken.Substring(0,20))..."
 
-# 2. Profil abrufen
-Invoke-RestMethod "http://localhost:5101/api/v1/profile" `
+# 2. Eigenes Profil abrufen
+$profile = Invoke-RestMethod "http://localhost:5101/api/v1/profile" `
     -Headers @{ Authorization = "Bearer $($resp.accessToken)" }
+Write-Host "PublicUsername: $($profile.data.publicUsername)"
 
-# 3. Swagger-Spezifikation laden
+# 3. Benutzernamen-Verfügbarkeit prüfen (kein Auth nötig)
+Invoke-RestMethod "http://localhost:5101/api/v1/profile/check-username/test-user"
+
+# 4. Städte-Autocomplete
+Invoke-RestMethod "http://localhost:5101/api/v1/autocomplete/cities?query=Berlin"
+
+# 5. Swagger-Spezifikation laden
 Invoke-RestMethod "http://localhost:5101/swagger/v1/swagger.json" | Select-Object -ExpandProperty info
 ```
 
@@ -610,7 +689,9 @@ Invoke-RestMethod "http://localhost:5101/swagger/v1/swagger.json" | Select-Objec
 - [ ] Login liefert `accessToken` und `refreshToken`
 - [ ] Bearer-Token wird automatisch in alle Requests gesetzt
 - [ ] Auto-Refresh bei 401 implementiert
-- [ ] Profil-Endpunkte funktionieren
+- [ ] Profil-Endpunkte funktionieren (`publicUsername`, `displayName`)
+- [ ] Benutzernamen-Verfügbarkeit (`check-username`) integriert
+- [ ] Autocomplete für Städte und Länder integriert
 - [ ] Profilbild-Upload funktioniert
 - [ ] Token-Persistenz passend zur Plattform implementiert
 - [ ] Smoke-Test erfolgreich
@@ -620,6 +701,15 @@ Invoke-RestMethod "http://localhost:5101/swagger/v1/swagger.json" | Select-Objec
 ## Weiterführende Ressourcen
 
 - `Docs/API-DOCUMENTATION.md` – vollständige API-Referenz dieses Projekts
-- `http://localhost:5101/swagger` – interaktive API-Dokumentation (Development)
-- `MAUI-App.prompt.md` – vollständige MAUI-App-Erstellung
+- `http://localhost:5101/swagger` – interaktive API-Dokumentation, HTTP-Profil
+- `https://localhost:7157/swagger` – interaktive API-Dokumentation, HTTPS-Profil
+- `jw-add-api-endpoints-bearer-auth.prompt.md` – Server-seitige Bearer-Auth-Konfiguration
 - `jw-activate-emailconfirmation.prompt.md` – E-Mail-Bestätigung aktivieren
+
+---
+
+<!-- Footer -->
+<div style="text-align: center; font-size: 0.8em; color: #666; margin-top: 2em;">
+  <p style="margin:0;">AuthCore API Consumer Agent</p>
+  <p style="margin:0; font-size: 0.9em;">© 2026 <a href="https://joerg-walkowiak.de/" style="color: inherit; text-decoration: none;">Jörg Walkowiak</a>. Alle Rechte vorbehalten. | Stand: 29.05.2026</p>
+</div>

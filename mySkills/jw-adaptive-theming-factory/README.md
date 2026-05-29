@@ -1,3 +1,11 @@
+---
+name: jw-adaptive-theming-factory
+displayName: JW Adaptive Theming Factory
+description: Zentrales Skillverzeichnis für adaptive Themes in Webanwendungen.
+version: 1.0.0
+author: JW
+---
+
 # jw-adaptive-theming-factory
 
 `jw-adaptive-theming-factory` ist das zentrale Skillverzeichnis für adaptive Themes in Webanwendungen. Es stellt eine einheitliche Theming-Grundlage bereit, die sowohl mit Syncfusion als auch ohne Syncfusion genutzt werden kann.

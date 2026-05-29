@@ -1,6 +1,6 @@
-
 ---
 name: social-media-postings
+version: 1.0
 description: Erstellt Social-Media-Beiträge zu Buchinhalten und Projektthemen rund um das GitHub Copilot CLI Praxisbuch. Verwende diesen Skill, wenn Social-Media-Posts für Facebook, LinkedIn oder Twitter/X angefordert werden – inklusive plattformspezifischer Formatierung, Hashtags und Call-to-Action.
 ---
 

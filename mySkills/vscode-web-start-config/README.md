@@ -1,3 +1,11 @@
+---
+name: vscode-web-start-config
+displayName: VS Code Web Start Config
+description: Set up robust VS Code startup flows for website projects so users can press F5 and get a working local server plus browser launch.
+version: 1.0.0
+author: JW
+---
+
 # vscode-web-start-config
 
 Reusable skill for configuring VS Code F5 startup workflows in website projects.

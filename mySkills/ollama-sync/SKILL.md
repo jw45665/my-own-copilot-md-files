@@ -1,3 +1,11 @@
+---
+name: ollama-sync
+displayName: Ollama Model Sync
+description: Synchronisiert automatisch die verfügbaren Ollama-Modelle mit der chatLanguageModels.json Konfiguration.
+version: 1.0.0
+author: JW
+---
+
 # Ollama Model Sync Skill
 
 ## Beschreibung

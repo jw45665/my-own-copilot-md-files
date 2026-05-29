@@ -1,5 +1,6 @@
 ---
 name: vs-f5-react-vite-enable
+version: 1.0
 description: Aktiviert in React/Vite-Projekten die Ausführung mit F5 in Visual Studio und legt/merged gleichzeitig die VS-Code-Debugkonfiguration an. Use when users ask things like: "Ich möchte die Anwendung in VS mit F5 starten können", "React/Vite in Visual Studio debuggen", "F5-Start für Vite einrichten", "launch.json für Edge/Chrome anlegen", "esproj mit npm run dev konfigurieren", "VS + VS Code Startkonfiguration für React Vite".
 ---
 

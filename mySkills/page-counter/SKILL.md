@@ -1,3 +1,11 @@
+---
+name: page-counter
+displayName: Page Counter
+description: Beschreibt eine serverseitige Page-Counter-Integration für .NET Web-Anwendungen.
+version: 1.0.0
+author: JW
+---
+
 # Skill: Page-Counter (file-backed) für .NET-Anwendungen
 
 Kurz: Dieses Skill beschreibt eine wiederverwendbare Anleitung und Vorlagen, um einen einfachen, serverseitigen Page-Counter in eine beliebige .NET Web-Anwendung (Minimal API / ASP.NET Core) zu integrieren. Die Lösung verwendet eine Datei außerhalb von wwwroot (z. B. `App-Data/counts.json`) und bietet zwei Endpoints: `GET /api/hits` und `POST /api/hit`.

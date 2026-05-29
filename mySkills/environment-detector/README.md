@@ -1,3 +1,11 @@
+---
+name: environment-detector
+displayName: Environment Detector
+description: Automatische Erkennung von Umgebungsinformationen für Metadaten-Konfigurationen.
+version: 1.0.0
+author: JW
+---
+
 # Environment Detector Skill
 
 Automatische Erkennung von Umgebungsinformationen für das `environment`-Objekt in `data/model-metadata.json`.

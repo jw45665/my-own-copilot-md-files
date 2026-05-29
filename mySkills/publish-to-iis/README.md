@@ -1,3 +1,11 @@
+---
+name: publish-to-iis
+displayName: Publish to IIS
+description: Definiert einen reproduzierbaren Ablauf, um ein Vite/React-Projekt auf IIS zu veröffentlichen.
+version: 1.0.0
+author: JW
+---
+
 # Skill: publish-to-iis
 
 Dieser Skill definiert einen reproduzierbaren Ablauf, um ein Vite/React-Projekt auf IIS zu veröffentlichen.

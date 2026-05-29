@@ -1,3 +1,11 @@
+---
+name: lm-studio-sync
+displayName: LM Studio Model Sync
+description: Synchronisiert automatisch die verfügbaren LM-Studio-Modelle mit der chatLanguageModels.json Konfiguration.
+version: 1.0.0
+author: JW
+---
+
 # LM Studio Model Sync Skill
 
 ## Beschreibung
