@@ -1,11 +1,3 @@
----
-name: image-downloader
-displayName: Image Downloader
-description: Automatisiert das Finden und Herunterladen lizenzfreier Bilder mit Browser-Unterstützung und Lizenzangaben.
-version: 1.0.0
-author: JW
----
-
 # Image Downloader Skill
 
 Kurz: Dieses Skill automatisiert das Finden und Herunterladen von lizenzfreien Bildern (z. B. Unsplash/Pexels) inklusive optionaler Annahme von Cookie‑Bannern per Playwright und sichert Lizenzangaben in `assets/credits.md`.

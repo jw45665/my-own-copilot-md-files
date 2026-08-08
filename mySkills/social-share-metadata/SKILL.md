@@ -128,11 +128,11 @@ Interpretation:
 - **503 auf `/_blazor/negotiate`**: App-Interaktivität instabil; statische Share-Auslieferung für Crawler sicherstellen.
 - **200 auf `/` + Bild, aber falsche Preview**: Cache/Re-Scrape/Canonical- oder OG-URL-Divergenz prüfen.
 
-## Blazor-Hinweis
+## Blazor & Razor Spezifisch (VERBINDLICH)
 
-- `HeadContent` muss im initialen Response vorhanden sein.
-- Für Share-Crawler ggf. statische/prerenderte Ausgabe erzwingen.
-- Validierung immer sowohl im Quelltext-Response als auch im Debugger.
+1. **Kein `<head>` in Komponenten**: Nutze niemals das HTML-Tag `<head>` innerhalb einer `.razor`-Seite. Dies wird im `<body>` gerendert und von Crawlern oft ignoriert oder führt zu Parsing-Fehlern.
+2. **Nutze `<HeadContent>`**: Alle Metadaten (OG, Twitter, etc.) müssen zwingend in ein `<HeadContent>`-Element gewickelt werden, damit Blazor sie korrekt in den echten `<head>` des Dokuments injiziert.
+3. **Nutze `<PageTitle>`**: Verwende für den Seitentitel ausschließlich die Razor-Komponente `<PageTitle>`, statt `<title>` zu verwenden.
 
 ## Verifikation (Pflicht)
 

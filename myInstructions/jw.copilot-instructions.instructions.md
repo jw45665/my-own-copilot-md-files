@@ -1,6 +1,6 @@
 # Sinn und Zweck
 
-Die Datei `copilot-instructions.md` dient dazu, KI-gestützten Tools wie GitHub Copilot projektspezifische Anweisungen zu geben. Sie hilft, die Qualität und Konsistenz der generierten Vorschläge zu verbessern, indem sie klare Vorgaben zu Technologien, Stil und Architektur macht.
+Die Datei `jw.copilot-instructions.md` dient dazu, KI-gestützten Tools wie GitHub Copilot projektspezifische Anweisungen zu geben. Sie hilft, die Qualität und Konsistenz der generierten Vorschläge zu verbessern, indem sie klare Vorgaben zu Technologien, Stil und Architektur macht.
 
 # Formulierungsempfehlungen
 
