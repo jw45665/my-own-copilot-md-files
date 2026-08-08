@@ -21,6 +21,9 @@ Meine Sammlung von mir generierter AI Agent Skills und Instructions für die aut
 | 13 | [**VS Code Web Start Config**](mySkills/vscode-web-start-config/SKILL.md) | Stellt Starterkonfigurationen für Webprojekte in VS Code bereit, inklusive Launch- und Debug-Setups. | "Erstelle eine VS Code Web-Startkonfiguration" / "Füge Web Start Config für VS Code hinzu" |
 | 14 | [**VS-F5 React/Vite Enable**](mySkills/vs-f5-react-vite-enable/SKILL.md) | Aktiviert F5-Start und Debug-Konfiguration für React/Vite in Visual Studio und VS Code. | "Ich möchte die Anwendung in VS mit F5 starten können" / "React/Vite in Visual Studio debuggen" |
 | 15 | [**VS Template Agent**](mySkills/vs-template-agent/skill.md) | Erstellt, installiert und validiert robuste Visual-Studio-Projekt- und Item-Templates. | "Erstelle ein Visual-Studio-Template" / "Template aus bestehendem Projekt erzeugen" |
+| 16 | [**Claude Design**](mySkills/claude-design/SKILL.md) | Unterstützt Designarbeit für lokale HTML-Artefakte, inklusive One-off-Layouts, Prototypen, Decks und visueller Exploration. | "claude-design" / "Design one-off HTML artifacts" |
+| 17 | [**Design.md**](mySkills/design-md/SKILL.md) | Erstellt und validiert Google DESIGN.md Token-Spec-Dateien für Design-Systeme. | "design-md" / "DESIGN.md" |
+| 18 | [**Popular Web Designs**](mySkills/popular-web-designs/SKILL.md) | Liefert realistische Design-Systeme als HTML/CSS-Vorlagen für bekannte Web-UIs. | "popular-web-designs" / "make it look like Stripe" |
 
 ## 🧾 Instructions
 
